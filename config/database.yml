@@ -1,0 +1,42 @@
+# MySQL.  Versions 4.1 and 5.0 are recommended.
+#
+# Install the MYSQL driver
+#   gem install mysql2
+#
+# Ensure the MySQL gem is defined in your Gemfile
+#   gem 'mysql2'
+#
+# And be sure to use new-style password hashing:
+#   http://dev.mysql.com/doc/refman/5.0/en/old-client.html
+# ---------------------- LXP --------------------------------
+development:
+  primary:
+    adapter: mysql2
+    encoding: utf8mb4
+    database: users-campaign
+    pool: 5
+    username: rails
+    password: railspass
+    # customized for different installations of MySql.
+    # Find the first sock that exists and connect through it.
+    socket: <%= ['/opt/local/var/run/mysql5/mysqld.sock','/opt/local/var/run/mysql55/mysqld.sock','/opt/local/var/run/mysqld/mysqld.sock','/var/run/mysqld/mysqld.sock','/tmp/mysql.sock', '/var/tmp/mysql.sock'].select { |f| File.exist? f }.first %>
+    # If none of the above works, comment the entire socket part
+    # and uncomment the following line. Same works for test database.
+    host: <%= ENV['DEV_DATABASE_HOST'] || 'localhost' %>
+    reconnect: true
+    variables:
+      sql_mode: TRADITIONAL
+
+test: &test
+  primary: 
+    adapter: mysql2
+    encoding: utf8mb4
+    pool: 5
+    username: rails
+    password: railspass
+    socket: <%= ['/opt/local/var/run/mysql5/mysqld.sock','/opt/local/var/run/mysql55/mysqld.sock','/opt/local/var/run/mysqld/mysqld.sock','/var/run/mysqld/mysqld.sock','/tmp/mysql.sock', '/var/tmp/mysql.sock'].select { |f| File.exist? f }.first %>
+    reconnect: true
+    database: users-campaign-test %>
+    host: <%= ENV['DEV_DATABASE_HOST'] || 'localhost' %>
+    variables:
+      sql_mode: TRADITIONAL
